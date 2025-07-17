@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% load static %}
+
+{% block extra_styles %}
+<link rel="stylesheet" href="{% static 'projectcss/add_employee.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="form-wrapper">
+  <div class="form-card">
+    {% if messages %}
+      <div class="messages-container">
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <h2>Add New Employee</h2>
+    <form method="post" novalidate>
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <div class="form-error">{{ form.non_field_errors }}</div>
+      {% endif %}
+
+      <div class="form-group">
+        <label for="id_Employee_name">Employee Name</label>
+        {{ form.Employee_name }}
+        {% if form.Employee_name.errors %}
+          <div class="form-error">{{ form.Employee_name.errors|striptags }}</div>
+        {% endif %}
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="id_audit_manager">Audit Manager</label>
+          {{ form.audit_manager }}
+          {% if form.audit_manager.errors %}
+            <div class="form-error">{{ form.audit_manager.errors|striptags }}</div>
+          {% endif %}
+        </div>
+
+        <div class="form-group">
+          <label for="id_Partner">Partner</label>
+          {{ form.Partner }}
+          {% if form.Partner.errors %}
+            <div class="form-error">{{ form.Partner.errors|striptags }}</div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="id_Admin">Admin</label>
+        {{ form.Admin }}
+        {% if form.Admin.errors %}
+          <div class="form-error">{{ form.Admin.errors|striptags }}</div>
+        {% endif %}
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-success">
+            <i class="fas fa-plus-circle me-1"></i> Add / Update Employee
+        </button>
+        <button type="button" id="delete-btn" class="btn btn-danger ms-2" disabled>
+            <i class="fas fa-trash-alt me-1"></i> Delete Employee
+        </button>
+        <button type="reset" class="btn btn-outline-secondary">Clear</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+
+{% block extra_scripts %}
+
+<script src="{% static 'projectjs/add_employee.js' %}"></script>
+{% endblock %}

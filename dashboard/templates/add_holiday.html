@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_styles %}
+<link rel="stylesheet" href="{% static 'dashboard/plugins/bootstrap/css/bootstrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'dashboard/plugins/fontawesome-free/css/all.min.css' %}">
+<link rel="stylesheet" href="{% static 'projectcss/holiday.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-sm border-0 form-card">
+
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0"><i class="fas fa-calendar-day me-2"></i>Add Holiday</h5>
+        </div>
+        <div class="card-body">
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+          {% endif %}
+
+          <form method="post" novalidate>
+            {% csrf_token %}
+
+            <div class="mb-3">
+              <label for="id_from_date" class="form-label">From Date</label>
+              {{ form.from_date }}
+              {% if form.from_date.errors %}
+                <div class="text-danger small">{{ form.from_date.errors.0 }}</div>
+              {% endif %}
+            </div>
+
+            <div class="mb-3">
+              <label for="id_to_date" class="form-label">To Date</label>
+              {{ form.to_date }}
+              {% if form.to_date.errors %}
+                <div class="text-danger small">{{ form.to_date.errors.0 }}</div>
+              {% endif %}
+            </div>
+
+            <div class="mb-3">
+              <label for="id_fullday_halfday" class="form-label">Full Day / Half Day</label>
+              {{ form.fullday_halfday }}
+              {% if form.fullday_halfday.errors %}
+                <div class="text-danger small">{{ form.fullday_halfday.errors.0 }}</div>
+              {% endif %}
+            </div>
+
+            <div class="mb-3">
+              <label for="id_description" class="form-label">Description (optional)</label>
+              {{ form.description }}
+              {% if form.description.errors %}
+                <div class="text-danger small">{{ form.description.errors.0 }}</div>
+              {% endif %}
+            </div>
+
+            <button type="submit" name="action" value="add" class="btn btn-success me-2">
+                <i class="fas fa-check-circle me-1"></i> Add Holiday
+            </button>
+
+            <button type="submit" name="action" value="delete" class="btn btn-danger">
+                <i class="fas fa-trash me-1"></i> Delete Holiday
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_styles %}
+<link rel="stylesheet" href="{% static 'dashboard/plugins/fullcalendar/main.min.css' %}">
+<link rel="stylesheet" href="{% static 'dashboard/plugins/bootstrap/css/bootstrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'projectcss/quarterview.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="card-body p-0">
+    <div class="d-flex" style="height: 880px; width: 100%;">
+      
+      <!-- Employee Sidebar -->
+      <div class="employee-sidebar bg-light border-end d-flex flex-column" style="height: 100%;">
+        <div class="p-3">
+          <h5>Employees</h5>
+          <input
+            type="text"
+            id="employeeSearch"
+            class="form-control mb-2"
+            placeholder="Search employees..."
+            autocomplete="off"
+          />
+        </div>
+        <div id="employeeListContainer" class="flex-grow-1 overflow-auto px-3 pb-3">
+          <ul id="employeeList" class="list-group">
+            {% for employee in employees %}
+              <li class="list-group-item employee-item">{{ employee.Employee_name }}</li>
+            {% empty %}
+              <li class="list-group-item text-muted">No employees found.</li>
+            {% endfor %}
+          </ul>
+
+        </div>
+      </div>
+
+      <!-- Calendar Area -->
+      <div class="flex-grow-1 p-3 d-flex flex-column">
+        <h5 class="mb-3 fw-bold text-dark border-bottom pb-2">Audit Planning</h5>
+
+        <div class="calendar-controls mb-3 d-flex align-items-center justify-content-between px-2">
+          <div>
+            <label for="calendar-month">Month:</label>
+            <select id="calendar-month" class="form-select d-inline-block w-auto mx-2"></select>
+
+            <label for="calendar-year">Year:</label>
+            <select id="calendar-year" class="form-select d-inline-block w-auto"></select>
+          </div>
+
+          <div>
+            <button id="exportExcel" class="btn btn-success btn-sm me-2" type="button">Export to Excel</button>
+            <button id="exportPDF" class="btn btn-danger btn-sm" type="button">Export to PDF</button>
+          </div>
+
+          
+        </div>
+
+        <div id="calendar" class="flex-grow-1 mb-3"></div>
+
+        <div class="calendar-summary d-flex justify-content-between align-items-center px-2 py-2 mb-3 border rounded bg-light">
+            <div><strong>Working Days:</strong> <span id="workingDaysCount">0</span></div>
+            <div><strong>Available:</strong> <span id="availableCount">0</span></div>
+            <div><strong>Allocated:</strong> <span id="allocatedCount">0</span></div>
+            <div><strong>Pending:</strong> <span id="pendingCount">0</span></div>
+            <div><strong>Holiday:</strong> <span id="holidayCount">0</span></div>
+            <div><strong>Leave:</strong> <span id="leaveCount">0</span></div>
+        </div>
+
+      </div>
+
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="eventModalLabel">Schedule Event</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="eventForm">
+          <div class="form-group mb-3">
+            <label for="fromDate">From Date</label>
+            <input type="date" class="form-control" id="fromDate">
+          </div>
+          <div class="form-group mb-3">
+            <label for="toDate">To Date</label>
+            <input type="date" class="form-control" id="toDate">
+          </div>
+          <div class="form-group mb-3">
+            <label for="dayType">Day Type</label>
+            <select class="form-control" id="dayType">
+              <option value="full day" selected>Full Day</option>
+              <option value="half day">Half Day</option>
+            </select>
+          </div>
+          <div class="form-group mb-3">
+            <label for="category">Clients</label>
+            <select class="form-control" id="category" multiple size="10">
+              <option value="Holiday">Holiday</option>
+              <option value="Leave">Leave</option>
+              {% for client in clients %}
+                <option value="{{ client.Client_name }}">{{ client.Client_name }}</option>
+              {% empty %}
+                <option disabled>No clients found</option>
+              {% endfor %}
+            </select>
+          </div>
+          <!-- Add this inside <form> before modal-footer -->
+          <div class="form-group mb-3">
+            <label for="description">Description</label>
+            <textarea class="form-control" id="description" rows="3" placeholder="Enter event description..."></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button id="saveEvent" class="btn btn-primary">Save</button> 
+        <button id="deleteEvent" class="btn btn-danger">Delete</button>
+        <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'dashboard/plugins/fullcalendar/main.min.js' %}"></script>
+<script src="{% static 'dashboard/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'projectjs/calendar.js' %}"></script>
+{% endblock %}

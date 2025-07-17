@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_styles %}
+<link rel="stylesheet" href="{% static 'dashboard/plugins/fullcalendar/main.min.css' %}">
+<link rel="stylesheet" href="{% static 'dashboard/plugins/bootstrap/css/bootstrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'projectcss/quarterview.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="card-body p-0">
+    <div class="d-flex" style="height: 880px; width: 100%;">
+
+      <!-- Employee Sidebar -->
+      <aside class="employee-sidebar bg-light border-end d-flex flex-column" style="height: 100%; width: 250px;">
+        <div class="p-3">
+          <h5>Employees</h5>
+          <input
+            type="text"
+            id="employeeSearch"
+            class="form-control mb-3"
+            placeholder="Search employees..."
+            autocomplete="off"
+          />
+        </div>
+        <div id="employeeListContainer" class="flex-grow-1 overflow-auto px-3 pb-3">
+          <ul id="employeeList" class="list-group">
+            {% for employee in employees %}
+              <li class="list-group-item employee-item">{{ employee.Employee_name }}</li>
+            {% empty %}
+              <li class="list-group-item text-muted">No employees found.</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </aside>
+
+      <!-- Calendar Area -->
+      <section class="flex-grow-1 p-4 d-flex flex-column">
+        <h5 class="mb-4 fw-bold text-dark border-bottom pb-2">Audit Planning Quarter View</h5>
+
+        <div class="calendar-controls mb-4 d-flex justify-content-between align-items-start flex-wrap gap-3">
+
+            <form class="d-flex gap-3 align-items-center" id="dateRangeForm" onsubmit="return false;">
+                <div class="d-flex align-items-center gap-1">
+                    <label for="fromDate" class="mb-0">From Date:</label>
+                    <input type="date" class="form-control form-control-sm" id="fromDate" name="fromDate" style="width: 150px;" />
+                </div>
+
+                <div class="d-flex align-items-center gap-1">
+                    <label for="toDate" class="mb-0">To Date:</label>
+                    <input type="date" class="form-control form-control-sm" id="toDate" name="toDate" style="width: 150px;" />
+                </div>
+            </form>
+
+
+            <div class="d-flex gap-2">
+              <button id="exportExcel" class="btn btn-success btn-sm" type="button">Export to Excel</button>
+              <button id="exportPDF" class="btn btn-danger btn-sm" type="button">Export to PDF</button>
+            </div>
+
+          <!-- New grid div with 5 columns and 31 rows -->
+
+
+        </div>
+
+            <div id="gridContainer" style="display:grid; grid-template-columns: repeat(4, 1fr); gap: 5px; border: 1px solid #ccc;"></div>
+
+
+        <!-- You can add calendar or quarter view content here -->
+
+      </section>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'dashboard/plugins/fullcalendar/main.min.js' %}"></script>
+<script src="{% static 'dashboard/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'projectjs/quarterview.js' %}"></script>
+{% endblock %}

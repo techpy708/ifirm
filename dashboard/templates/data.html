@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_styles %}
+<link rel="stylesheet" href="{% static 'dashboard/plugins/bootstrap/css/bootstrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'dashboard/plugins/fontawesome-free/css/all.min.css' %}">
+<link rel="stylesheet" href="{% static 'projectcss/data.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+  <h2>Record Management</h2>
+  <ul class="nav nav-tabs" id="managementTabs" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" id="employee-tab" data-toggle="tab" href="#employee" role="tab" aria-controls="employee" aria-selected="true">Employee</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="client-tab" data-toggle="tab" href="#client" role="tab" aria-controls="client" aria-selected="false">Client</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="users-tab" data-toggle="tab" href="#users" role="tab" aria-controls="users" aria-selected="false">Users</a>
+    </li>
+
+  </ul>
+
+  <div class="tab-content" id="managementTabsContent">
+    <!-- Employee Tab -->
+    <div class="tab-pane fade show active table-wrapper" id="employee" role="tabpanel" aria-labelledby="employee-tab">
+      <div class="action-buttons">
+        <button type="button" class="btn btn-primary btn-sm" id="add-new-employee">Add New</button>
+        <input type="text" id="employee-search" class="form-control form-control-sm" placeholder="Search Employee Name" style="max-width: 250px;">
+      </div>
+      <div class="table-responsive">
+        <table id="employee-table" class="table table-hover table-striped table-bordered">
+          <thead class="thead-light">
+            <tr>
+              <th>ID</th>
+              <th>Employee Name</th>
+              <th>Audit Manager</th>
+              <th>Partner</th>
+              <th>Admin</th>
+              <th>Actions</th>  <!-- Actions column -->
+            </tr>
+          </thead>
+          <tbody>
+            {% for emp in employees %}
+            <tr data-id="{{ emp.pk }}">
+              <td class="static-cell">{{ emp.pk }}</td>
+              <td class="editable-cell" data-field="employee_name">{{ emp.Employee_name }}</td>
+              <td class="editable-cell" data-field="audit_manager">{{ emp.audit_manager|default:"" }}</td>
+              <td class="editable-cell" data-field="partner">{{ emp.Partner|default:"" }}</td>
+              <td class="editable-cell" data-field="admin">{{ emp.Admin|default:"" }}</td>
+              <td>
+                <button class="btn btn-primary btn-sm btn-edit" title="Edit"><i class="fas fa-edit"></i></button>
+                <button class="btn btn-success btn-sm btn-save" title="Save" style="display:none;"><i class="fas fa-save"></i></button>
+                <button class="btn btn-secondary btn-sm btn-cancel" title="Cancel" style="display:none;"><i class="fas fa-times"></i></button>
+                <button class="btn btn-danger btn-sm btn-delete" title="Delete"><i class="fas fa-trash"></i></button>
+              </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="6" class="text-center">No employees found.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Client Tab -->
+    <div class="tab-pane fade table-wrapper" id="client" role="tabpanel" aria-labelledby="client-tab">
+      <div class="action-buttons">
+        <button type="button" class="btn btn-primary btn-sm" id="client-add-btn">Add New</button>
+        <input type="text" id="client-search" class="form-control form-control-sm" placeholder="Search Client Name" style="max-width: 250px;">
+      </div>
+      <div class="table-responsive">
+        <table id="client-table" class="table table-hover table-striped table-bordered">
+          <thead class="thead-light">
+            <tr>
+              <th>ID</th>
+              <th>Client Name</th>
+              <th>Audit Manager</th>
+              <th>Partner</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for c in clients %}
+            <tr data-id="{{ c.pk }}">
+              <td class="static-cell">{{ c.pk }}</td>
+              <td class="editable-cell" data-field="client_name">{{ c.Client_name }}</td>
+              <td class="editable-cell" data-field="audit_manager">{{ c.audit_manager|default:"" }}</td>
+              <td class="editable-cell" data-field="partner">{{ c.Partner|default:"" }}</td>
+              <td>
+                <button class="btn btn-primary btn-sm btn-edit" title="Edit"><i class="fas fa-edit"></i></button>
+                <button class="btn btn-success btn-sm btn-save" title="Save" style="display:none;"><i class="fas fa-save"></i></button>
+                <button class="btn btn-secondary btn-sm btn-cancel" title="Cancel" style="display:none;"><i class="fas fa-times"></i></button>
+                <button class="btn btn-danger btn-sm btn-delete" title="Delete"><i class="fas fa-trash"></i></button>
+              </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5" class="text-center">No clients found.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Users Tab -->
+    <div class="tab-pane fade table-wrapper" id="users" role="tabpanel" aria-labelledby="users-tab">
+      <div class="action-buttons">
+        <button type="button" class="btn btn-primary btn-sm" id="users-add-btn">Add New</button>
+        <input type="text" id="users-search" class="form-control form-control-sm" placeholder="Search User" style="max-width: 250px;">
+      </div>
+      <div class="table-responsive">
+        <table id="users-table" class="table table-hover table-striped table-bordered">
+          <thead class="thead-light">
+            <tr>
+              <th>ID</th>
+              <th>Username</th>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Is Superuser</th>
+              <th>Is Staff</th>
+              <th>Date Joined</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for u in users %}
+            <tr data-id="{{ u.pk }}">
+              <td class="static-cell">{{ u.pk }}</td>
+              <td class="editable-cell" data-field="username">{{ u.username }}</td>
+              <td class="editable-cell" data-field="first_name">{{ u.first_name }}</td>
+              <td class="editable-cell" data-field="last_name">{{ u.last_name }}</td>
+              <td class="editable-cell" data-field="is_superuser">{% if u.is_superuser %}Yes{% else %}No{% endif %}</td>
+              <td class="editable-cell" data-field="is_staff">{% if u.is_staff %}Yes{% else %}No{% endif %}</td>
+              <td class="static-cell">{{ u.date_joined|date:"Y-m-d H:i" }}</td>
+              <td>
+                <button class="btn btn-primary btn-sm btn-edit" title="Edit"><i class="fas fa-edit"></i></button>
+                <button class="btn btn-success btn-sm btn-save" title="Save" style="display:none;"><i class="fas fa-save"></i></button>
+                <button class="btn btn-secondary btn-sm btn-cancel" title="Cancel" style="display:none;"><i class="fas fa-times"></i></button>
+                <button class="btn btn-danger btn-sm btn-delete" title="Delete"><i class="fas fa-trash"></i></button>
+              </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="8" class="text-center">No users found.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+
+  </div>
+</div>
+
+<!-- Bootstrap JS and dependencies (for tabs to work) -->
+<script src="{% static 'dashboard/plugins/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'dashboard/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'dashboard/plugins/popper/umd/popper.min.js' %}"></script>
+<script src="{% static 'projectjs/data.js' %}"></script>
+{% endblock %}
